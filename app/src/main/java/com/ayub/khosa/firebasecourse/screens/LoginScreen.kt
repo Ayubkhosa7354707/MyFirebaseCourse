@@ -1,0 +1,165 @@
+package com.ayub.khosa.firebasecourse.screens
+
+import android.content.res.Configuration.UI_MODE_NIGHT_NO
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.ayub.khosa.firebasecourse.R
+import com.ayub.khosa.firebasecourse.data.model.Resource
+import com.ayub.khosa.firebasecourse.ui.theme.MyFirebaseCourseTheme
+import com.ayub.khosa.firebasecourse.viewmodel.AuthViewModel
+
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.Button
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.graphics.RectangleShape
+import com.ayub.khosa.firebasecourse.screens.common.TitleText
+import com.ayub.khosa.firebasecourse.utils.PrintLogs
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun LoginScreen(viewModel: AuthViewModel?, navController: NavController) {
+
+
+
+
+    val authResource = viewModel?.loginFlow?.collectAsState()
+
+// email --> ayub.khosa@gmail.com
+    // pasword --> ayub.khosa
+
+    var input_email by rememberSaveable { mutableStateOf("") }
+    var input_password by rememberSaveable { mutableStateOf("") }
+    var isPasswordVisible by rememberSaveable { mutableStateOf(false) }
+
+    TitleText(Modifier.padding(top = 30.dp, start = 10.dp, end = 10.dp), "Login Screen")
+    Column(modifier = Modifier.padding(top = 80.dp, start = 10.dp, end = 10.dp)) {
+// email field
+        OutlinedTextField(
+            value = input_email, singleLine = true,
+            onValueChange = { newText -> input_email = newText },
+            label = { Text("Enter your email") },
+            modifier = Modifier.fillMaxWidth()
+        )
+/// password field
+        OutlinedTextField(
+            modifier = Modifier
+                .fillMaxWidth(),
+            singleLine = true,
+            visualTransformation = if (isPasswordVisible) {
+
+                VisualTransformation.None
+
+            } else {
+
+                PasswordVisualTransformation()
+
+            },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+            value = input_password,
+            onValueChange = { newText ->
+                input_password = newText
+            },
+            label = {
+                Text(text = "Password")
+            },
+            trailingIcon = {
+                if (isPasswordVisible) {
+                    IconButton(onClick = { isPasswordVisible = false }) {
+                        Icon(
+                            imageVector = Icons.Filled.Visibility,
+                            contentDescription = "hide_password"
+                        )
+                    }
+                } else {
+                    IconButton(
+                        onClick = { isPasswordVisible = true }) {
+                        Icon(
+                            imageVector = Icons.Filled.VisibilityOff,
+                            contentDescription = "hide_password"
+                        )
+                    }
+                }
+            },
+            placeholder = { Text(text = "Type password here") },
+            shape = RoundedCornerShape(percent = 0),
+        )
+        /////
+
+        Button(
+            onClick = {
+                viewModel?.loginUser(input_email, input_password)
+            },
+            shape = RectangleShape,
+
+        ) {
+            Text(text = "Login Button", style = MaterialTheme.typography.titleMedium)
+        }
+
+
+        ////// resposnce
+        authResource?.value?.let {
+            when (it) {
+                is Resource.Failure -> {
+                    PrintLogs.printInfo(" Resource.Failure ")
+                }
+                is Resource.Loading -> {
+                    PrintLogs.printInfo("Resource.Loading ")
+                }
+                is Resource.Success -> {
+                    PrintLogs.printInfo("Resource.Success Good loged in ")
+                }
+            }
+        }
+
+    }
+
+
+}
+
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO)
+@Composable
+fun LoginScreenPreviewLight() {
+    MyFirebaseCourseTheme {
+        LoginScreen(null, rememberNavController())
+    }
+}
+
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES)
+@Composable
+fun LoginScreenPreviewDark() {
+    MyFirebaseCourseTheme {
+        LoginScreen(null, rememberNavController())
+    }
+}
