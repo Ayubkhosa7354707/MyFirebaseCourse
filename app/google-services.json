@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "753814907932",
+    "project_id": "myfirebasecourse-50af1",
+    "storage_bucket": "myfirebasecourse-50af1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:753814907932:android:d902fe918c09144df5c3d9",
+        "android_client_info": {
+          "package_name": "com.ayub.khosa.firebasecourse"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD5X4yoqJ4Rd1Qgpiq9h69Bzx0cll6Gjb4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
