@@ -1,5 +1,6 @@
 package com.ayub.khosa.firebasecourse
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -16,13 +17,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.ayub.khosa.firebasecourse.ui.theme.MyFirebaseCourseTheme
-import com.ayub.khosa.firebasecourse.viewmodel.AuthViewModel
+import com.ayub.khosa.firebasecourse.screens.login.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    private val authViewModel by viewModels<AuthViewModel>()
+  //  private val authViewModel by viewModels<AuthViewModel>()
 
+    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -40,7 +42,7 @@ class MainActivity : ComponentActivity() {
                     snackbarHost = { SnackbarHost(snackbarHostState) },
                     content = {
                         MyFirebaseCourseTheme {
-                            AppNavHost(authViewModel)
+                            AppNavHost()
                         }
                     }
                 )

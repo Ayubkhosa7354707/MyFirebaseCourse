@@ -1,4 +1,4 @@
-package com.ayub.khosa.firebasecourse.viewmodel
+package com.ayub.khosa.firebasecourse.screens.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,7 +10,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(
@@ -29,8 +28,12 @@ class AuthViewModel @Inject constructor(
     init {
         if (repository.currentUser != null) {
             _loginFlow.value = Resource.Success(repository.currentUser!!)
+
         }
     }
+
+
+
 
     fun loginUser(email: String, password: String) = viewModelScope.launch {
         _loginFlow.value = Resource.Loading
@@ -44,9 +47,13 @@ class AuthViewModel @Inject constructor(
         _signupFlow.value = result
     }
 
-    fun logout() {
-        repository.logout()
-        _loginFlow.value = null
-        _signupFlow.value = null
+    fun logout()  = viewModelScope.launch {
+
+        val result = repository.logout()
+
+         if(  result.let { it is Resource.Success && it.result } == true){
+             _loginFlow.value=null
+             _signupFlow.value=null
+         }
     }
 }

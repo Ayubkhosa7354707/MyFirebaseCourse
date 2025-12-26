@@ -1,6 +1,8 @@
 package com.ayub.khosa.firebasecourse.repository
 
 import com.ayub.khosa.firebasecourse.data.model.Resource
+import com.ayub.khosa.firebasecourse.utils.PrintLogs
+import com.google.android.gms.common.api.Response
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.UserProfileChangeRequest
@@ -36,8 +38,16 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun logout() {
-        firebaseAuth.signOut()
+    override suspend fun logout():  Resource<Boolean>  {
+        return try {
+              firebaseAuth.signOut()
+            return Resource.Success<Boolean> (true)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            PrintLogs.printE(" "+e.message)
+            return Resource.Failure(e)
+        }
     }
+
 
 }
